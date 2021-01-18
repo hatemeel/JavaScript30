@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://forums.synfig.org/uploads/default/original/2X/c/cb8f3114df783b90a79dcde56a449fdada36707f.png"
+      type="image/x-icon"
+    />
+    <title>Drum Kit</title>
+
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        height: 100vh;
+        padding: 0 10%;
+        background-image: url(./images/bg.jpg);
+        background-size: cover;
+        background-position: center center;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        cursor: default;
+      }
+
+      .key {
+        flex: none;
+        width: 80px;
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.5);
+        border: 3px solid black;
+        border-radius: 10px;
+        transition: 70ms;
+      }
+
+      kbd {
+        color: white;
+        font-size: 36px;
+      }
+
+      span {
+        font-size: 14px;
+        text-transform: uppercase;
+        color: gold;
+      }
+
+      .active {
+        border-color: gold;
+        box-shadow: 0 0 10px rgba(255, 217, 0, 0.75);
+        transform: scale(1.1) rotate(5deg);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container"></div>
+
+    <script>
+      const keys = [
+        { code: 65, name: 'clap' },
+        { code: 83, name: 'hihat' },
+        { code: 68, name: 'kick' },
+        { code: 70, name: 'openhat' },
+        { code: 71, name: 'boom' },
+        { code: 72, name: 'ride' },
+        { code: 74, name: 'snare' },
+        { code: 75, name: 'tom' },
+        { code: 76, name: 'tink' },
+      ];
+
+      const container = document.querySelector('.container');
+
+      keys.forEach(({ code, name }) => {
+        container.innerHTML += `
+					<div class="key" data-key="${code}">
+						<kbd>${String.fromCharCode(code)}</kbd>
+						<span>${name}</span>
+					</div>
+					<audio src="./sounds/${name}.wav" data-key="${code}"></audio>
+				`;
+      });
+
+      const playAudio = (code) => {
+        const audio = document.querySelector(`audio[data-key="${code}"]`);
+        const key = document.querySelector(`.key[data-key="${code}"]`);
+        if (!audio || !key) return;
+        key.classList.add('active');
+        audio.currentTime = 0;
+        audio.play();
+      };
+
+      window.onkeydown = ({ keyCode }) => playAudio(keyCode);
+      document.querySelectorAll('.key').forEach((key) =>
+        key.addEventListener('transitionend', ({ propertyName }) => {
+          key.classList.remove('active');
+        })
+      );
+    </script>
+  </body>
+</html>
