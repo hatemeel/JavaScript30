@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://forums.synfig.org/uploads/default/original/2X/c/cb8f3114df783b90a79dcde56a449fdada36707f.png"
+      type="image/x-icon"
+    />
+    <title>Clock</title>
+
+    <style>
+      :root {
+        --main-color: #7c9473;
+      }
+
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .clock {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        filter: hue-rotate(var(--hue-rotate));
+      }
+
+      .arrows {
+        position: relative;
+        z-index: 1;
+      }
+
+      .arrows::before {
+        content: '';
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: white;
+        border: 5px solid var(--main-color);
+      }
+
+      .clock-arrow {
+        position: absolute;
+        bottom: 0;
+        background-color: var(--main-color);
+        transform-origin: bottom;
+        filter: drop-shadow(0 0 8px rgba(0, 0, 0, 0.25));
+      }
+
+      .hour {
+        width: 10px;
+        height: calc(25vmin - 75px);
+        min-height: 50px;
+      }
+
+      .minute {
+        width: 6px;
+        height: calc(37vmin - 75px);
+        min-height: 100px;
+      }
+
+      .second {
+        width: 3px;
+        height: calc(50vmin - 75px);
+      }
+
+      .times {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        width: calc(100vmin - 50px);
+        height: calc(100vmin - 50px);
+        opacity: 0.75;
+      }
+
+      .time-line {
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        font-size: 30px;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        color: var(--main-color);
+      }
+
+      .time-line:nth-child(2) {
+        transform: rotate(30deg);
+      }
+
+      .time-line:nth-child(3) {
+        transform: rotate(60deg);
+      }
+
+      .time-line:nth-child(4) {
+        transform: rotate(90deg);
+      }
+      .time-line:nth-child(4) span {
+        transform: rotate(-90deg);
+      }
+
+      .time-line:nth-child(5) {
+        transform: rotate(120deg);
+      }
+
+      .time-line:nth-child(6) {
+        transform: rotate(150deg);
+      }
+
+      .time-line.empty span::before {
+        content: '';
+        display: block;
+        width: 15px;
+        height: 3px;
+        background-color: var(--main-color);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="clock">
+        <div class="arrows">
+          <div class="clock-arrow hour"></div>
+          <div class="clock-arrow minute"></div>
+          <div class="clock-arrow second"></div>
+        </div>
+
+        <div class="times">
+          <div class="time-line">
+            <span>9</span>
+            <span>3</span>
+          </div>
+
+          <div class="time-line empty">
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="time-line empty">
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="time-line">
+            <span>12</span>
+            <span>6</span>
+          </div>
+
+          <div class="time-line empty">
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="time-line empty">
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const [hourArrow, minuteArrow, secondArrow] = document.querySelectorAll(
+        '.clock-arrow'
+      );
+      const clockEl = document.querySelector('.clock');
+
+      const setTime = () => {
+        requestAnimationFrame(() => {
+          const now = new Date();
+
+          const miliseconds = now.getMilliseconds();
+          const seconds = now.getSeconds() + miliseconds / 1000;
+          const minutes = now.getMinutes() + seconds / 60;
+          const hours = now.getHours() + minutes / 60;
+
+          const secondsDeg = (seconds / 60) * 360;
+          const minutesDeg = (minutes / 60) * 360;
+          const hoursDeg = (hours / 12) * 360;
+
+          secondArrow.style.transform = `translateX(-50%) rotate(${secondsDeg}deg)`;
+          minuteArrow.style.transform = `translateX(-50%) rotate(${minutesDeg}deg)`;
+          hourArrow.style.transform = `translateX(-50%) rotate(${hoursDeg}deg)`;
+
+          document.documentElement.style.setProperty(
+            '--hue-rotate',
+            `${secondsDeg}deg`
+          );
+        });
+      };
+
+      setInterval(setTime);
+    </script>
+  </body>
+</html>
