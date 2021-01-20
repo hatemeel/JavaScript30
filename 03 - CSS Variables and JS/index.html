@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="https://forums.synfig.org/uploads/default/original/2X/c/cb8f3114df783b90a79dcde56a449fdada36707f.png"
+      type="image/x-icon"
+    />
+    <title>CSS Variables and JS</title>
+
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+      }
+
+      .container {
+        height: 100vh;
+        color: #7c9473;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+      }
+
+      h1 span {
+        color: var(--main-color);
+      }
+
+      .image {
+        width: 500px;
+        height: 300px;
+        padding: var(--spacing);
+        background-color: var(--main-color);
+      }
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: blur(var(--blur));
+      }
+
+      .controls {
+        display: flex;
+        margin: 25px 0 30px;
+      }
+
+      .control {
+        display: flex;
+        align-items: center;
+      }
+
+      .control:not(:first-child) {
+        margin-left: 20px;
+      }
+
+      label {
+        margin-right: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Update CSS Variables with <span>JS</span></h1>
+
+      <div class="controls">
+        <div class="control">
+          <label>Spacing</label>
+          <input
+            oninput="setSpacing(event)"
+            type="range"
+            min="0"
+            max="100"
+            value="10"
+          />
+        </div>
+
+        <div class="control">
+          <label>Blur</label>
+          <input
+            oninput="setBlur(event)"
+            type="range"
+            min="0"
+            max="10"
+            value="2"
+            step=".5"
+          />
+        </div>
+
+        <div class="control">
+          <label>Main color</label>
+          <input oninput="setMainColor(event)" type="color" value="#6c74a3" />
+        </div>
+      </div>
+
+      <div class="image">
+        <img
+          src="https://images.unsplash.com/photo-1495476479092-6ece1898a101?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxleHBsb3JlLWZlZWR8M3x8fGVufDB8fHw%3D&auto=format&fit=crop&w=500&q=60"
+          alt=""
+        />
+      </div>
+    </div>
+
+    <script>
+      document.documentElement.style.setProperty('--spacing', `10px`);
+      document.documentElement.style.setProperty('--blur', `2px`);
+      document.documentElement.style.setProperty('--main-color', `#6c74a3`);
+
+      function setSpacing({ target: { value } }) {
+        document.documentElement.style.setProperty('--spacing', `${value}px`);
+      }
+
+      function setBlur({ target: { value } }) {
+        document.documentElement.style.setProperty('--blur', `${value}px`);
+      }
+
+      function setMainColor({ target: { value } }) {
+        document.documentElement.style.setProperty('--main-color', value);
+      }
+    </script>
+  </body>
+</html>
